@@ -7,6 +7,7 @@ using namespace BlackIceEngine;
 Engine::Engine()
 {
 	m_deviceResources = std::make_unique<DeviceResources>();
+	GetDefaultSize(m_screenWidth, m_screenHeight);
 }
 
 
@@ -24,6 +25,9 @@ void Engine::Init(HWND window, int width, int height)
 
 	m_mesh = std::make_unique<Mesh>();
 	m_mesh->Init();
+
+	m_material = std::make_unique<VertexColorMaterial>();
+	m_material->Init();
 }
 
 void Engine::Tick()
@@ -46,7 +50,25 @@ void Engine::Render()
 	// Add your rendering code here.
 	context;
 
+	D3DXMATRIX world;
+	D3DXMatrixIdentity(&world);
+
+	D3DXMATRIX view;
+	D3DXMatrixIdentity(&view);
+
+	D3DXVECTOR3 up, position, lookAt;
+	up = D3DXVECTOR3(0, 1, 0);
+	position = D3DXVECTOR3(0, 0, -10);
+	lookAt = D3DXVECTOR3(0, 0, 1);
+	D3DXMatrixLookAtLH(&view, &position, &lookAt, &up);
+
+	D3DXMATRIX projection;
+	float fieldOfView = (float)D3DX_PI / 4.0f;
+	float screenAspect = (float)m_screenWidth / (float)m_screenHeight;
+	D3DXMatrixPerspectiveFovLH(&projection, fieldOfView, screenAspect, 0.1f, 1000);
+
 	m_mesh->Render();
+	m_material->Render(m_mesh->GetIndexCount(), world, view, projection);
 
 	m_deviceResources->PIXEndEvent();
 
@@ -77,4 +99,13 @@ void Engine::Clear()
 void Engine::Shutdown()
 {
 	m_mesh->Shutdown();
+	m_material->Shutdown();
+}
+
+void Engine::OnWindowSizeChanged(int width, int height)
+{
+	m_screenWidth = width;
+	m_screenHeight = height;
+	if (!m_deviceResources->WindowSizeChanged(m_screenWidth, m_screenHeight))
+		return;
 }

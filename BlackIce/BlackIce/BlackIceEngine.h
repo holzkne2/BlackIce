@@ -3,6 +3,7 @@
 #include <memory>
 #include "DeviceResources.h"
 #include "Mesh.h"
+#include "VertexColorMaterial.h"
 
 namespace BlackIceEngine
 {
@@ -28,7 +29,7 @@ namespace BlackIceEngine
 		void OnDeactivated() {}
 		void OnSuspending() {}
 		void OnResuming() {}
-		void OnWindowSizeChanged(int width, int height) {}
+		void OnWindowSizeChanged(int width, int height);
 
 		DeviceResources* GetDeviceResources() const { return m_deviceResources.get(); }
 
@@ -40,8 +41,12 @@ namespace BlackIceEngine
 
 	private:
 		std::unique_ptr<DeviceResources> m_deviceResources;
+		int m_screenWidth;
+		int m_screenHeight;
+
 
 		std::unique_ptr<Mesh> m_mesh;
+		std::unique_ptr<VertexColorMaterial> m_material;
 
 		// Singleton
 	public:

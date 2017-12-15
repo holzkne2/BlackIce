@@ -385,6 +385,9 @@ void DeviceResources::SetWindow(HWND window, int width, int height)
 
 bool DeviceResources::WindowSizeChanged(int width, int height)
 {
+	if (m_window == NULL)
+		return false;
+
 	RECT newRc;
 	newRc.left = newRc.top = 0;
 	newRc.right = width;

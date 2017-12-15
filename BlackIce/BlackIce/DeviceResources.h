@@ -39,6 +39,8 @@ namespace BlackIceEngine {
 		D3D11_VIEWPORT          GetScreenViewport() const               { return m_screenViewport; }
 		UINT                    GetBackBufferCount() const				{ return m_backBufferCount; }
 
+		HWND* GetWindow() { return &m_window; }
+
 		// Performance events
 		void PIXBeginEvent(_In_z_ const wchar_t* name)
 		{
