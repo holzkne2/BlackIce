@@ -11,7 +11,7 @@ using namespace BlackIceEngine;
 
 namespace
 {
-	std::unique_ptr<BlackIceEngine::Engine> g_engine;
+	BlackIceEngine::Engine* g_engine;
 };
 
 // Indicates to hybrid graphics systems to prefer the discrete part by default
@@ -45,7 +45,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	if (FAILED(hr))
 		return 1;
 
-	g_engine = std::make_unique<Engine>();
+	g_engine = &Engine::Get();
 
 	MSG msg = { 0 };
 	HACCEL hAccelTable;
@@ -77,7 +77,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		}
 	}
 
-	g_engine.reset();
+	g_engine->Shutdown();
 
 	CoUninitialize();
 
@@ -149,7 +149,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    ShowWindow(hWnd, nCmdShow);
    
-   SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(g_engine.get()));
+   SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(g_engine));
 
    GetClientRect(hWnd, &rc);
 

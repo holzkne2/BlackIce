@@ -21,6 +21,9 @@ void Engine::Init(HWND window, int width, int height)
 	m_deviceResources->CreateDeviceResources();
 
 	m_deviceResources->CreateWindowSizeDependentResources();
+
+	m_mesh = std::make_unique<Mesh>();
+	m_mesh->Init();
 }
 
 void Engine::Tick()
@@ -43,6 +46,7 @@ void Engine::Render()
 	// Add your rendering code here.
 	context;
 
+	m_mesh->Render();
 
 	m_deviceResources->PIXEndEvent();
 
@@ -68,4 +72,9 @@ void Engine::Clear()
 	context->RSSetViewports(1, &viewport);
 
 	m_deviceResources->PIXEndEvent();
+}
+
+void Engine::Shutdown()
+{
+	m_mesh->Shutdown();
 }

@@ -29,6 +29,7 @@
 
 #include <d3d11_1.h>
 #include <DirectXMath.h>
+#include <d3dx9math.h>
 #include <DirectXColors.h>
 
 #include <algorithm>

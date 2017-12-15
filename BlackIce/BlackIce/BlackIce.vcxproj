@@ -82,6 +82,7 @@
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="BlackIceEngine.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -91,6 +92,7 @@
     <ClCompile Include="BlackIceEngine.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

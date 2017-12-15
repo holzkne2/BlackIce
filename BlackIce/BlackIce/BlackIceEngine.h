@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "DeviceResources.h"
+#include "Mesh.h"
 
 namespace BlackIceEngine
 {
@@ -12,6 +13,7 @@ namespace BlackIceEngine
 		virtual ~Engine();
 
 		void Init(HWND window, int width, int height);
+		void Shutdown();
 
 		void Tick();
 
@@ -28,6 +30,8 @@ namespace BlackIceEngine
 		void OnResuming() {}
 		void OnWindowSizeChanged(int width, int height) {}
 
+		DeviceResources* GetDeviceResources() const { return m_deviceResources.get(); }
+
 	private:
 		void Update();
 		void Render();
@@ -36,6 +40,8 @@ namespace BlackIceEngine
 
 	private:
 		std::unique_ptr<DeviceResources> m_deviceResources;
+
+		std::unique_ptr<Mesh> m_mesh;
 
 		// Singleton
 	public:

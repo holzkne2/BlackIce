@@ -6,7 +6,7 @@ namespace BlackIceEngine {
 	class DeviceResources
 	{
 	public:
-		DeviceResources(DXGI_FORMAT backBufferFormat = DXGI_FORMAT_R16G16B16A16_FLOAT,
+		DeviceResources(DXGI_FORMAT backBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM,
 			DXGI_FORMAT depthBufferFormat = DXGI_FORMAT_D24_UNORM_S8_UINT,
 			UINT backBufferCount = 2,
 			D3D_FEATURE_LEVEL minFeatureLevel = D3D_FEATURE_LEVEL_9_1);
@@ -93,13 +93,5 @@ namespace BlackIceEngine {
 		HWND                                            m_window;
 		D3D_FEATURE_LEVEL                               m_d3dFeatureLevel;
 		RECT                                            m_outputSize;
-
-		// Singleton
-	public:
-		static DeviceResources& Get()
-		{
-			static DeviceResources instance;
-			return instance;
-		}
 	};
 }
