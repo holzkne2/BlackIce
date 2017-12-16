@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Mesh.h"
 #include "BlackIceEngine.h"
+#include <vector>
 
 using namespace BlackIceEngine;
 
@@ -23,46 +24,75 @@ void Mesh::Init()
 
 bool Mesh::InitBuffers(ID3D11Device* device)
 {
-	VertexType* vertices;
-	unsigned long* indices;
+	std::vector<VertexType> vertices;
+	std::vector<unsigned long> indices;
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
 
+	unsigned int latitudeBands = 20;
+	unsigned int longitudeBands = 20;
+
 	// Set the number of vertices in the vertex array.
-	m_vertexCount = 3;
+	m_vertexCount = (latitudeBands + 1) * (longitudeBands + 1);
 
 	// Set the number of indices in the index array.
-	m_indexCount = 3;
-
-	// Create the vertex array.
-	vertices = new VertexType[m_vertexCount];
-	if (!vertices)
-	{
-		return false;
-	}
-
-	// Create the index array.
-	indices = new unsigned long[m_indexCount];
-	if (!indices)
-	{
-		return false;
-	}
+	m_indexCount = latitudeBands * longitudeBands * 6;
 
 	// Load the vertex array with data.
-	vertices[0].position = D3DXVECTOR3(-1.0f, -1.0f, 0.0f);  // Bottom left.
-	vertices[0].color = D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+	//vertices[0].position = D3DXVECTOR3(-1.0f, -1.0f, 0.0f);  // Bottom left.
+	//vertices[0].color = D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
 
-	vertices[1].position = D3DXVECTOR3(0.0f, 1.0f, 0.0f);  // Top middle.
-	vertices[1].color = D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+	//vertices[1].position = D3DXVECTOR3(0.0f, 1.0f, 0.0f);  // Top middle.
+	//vertices[1].color = D3DXVECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
 
-	vertices[2].position = D3DXVECTOR3(1.0f, -1.0f, 0.0f);  // Bottom right.
-	vertices[2].color = D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+	//vertices[2].position = D3DXVECTOR3(1.0f, -1.0f, 0.0f);  // Bottom right.
+	//vertices[2].color = D3DXVECTOR4(0.0f, 0.0f, 1.0f, 1.0f);
+
+	for (unsigned int lat = 0; lat <= latitudeBands; ++lat)
+	{
+		float theta = lat * DirectX::XM_PI / latitudeBands;
+		float sinTheta = sin(theta);
+		float cosTheta = cos(theta);
+
+		for (unsigned int lon = 0; lon <= longitudeBands; ++lon)
+		{
+			float phi = lon * 2 * DirectX::XM_PI / latitudeBands;
+			float sinPhi = sin(phi);
+			float cosPhi = cos(phi);
+
+			float x = cosPhi * sinTheta;
+			float y = cosTheta;
+			float z = sinPhi * sinTheta;
+
+			VertexType vertex;
+			vertex.position = D3DXVECTOR3(x, y, z);
+			vertex.color = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+
+			vertices.push_back(vertex);
+		}
+	}
 
 	// Load the index array with data.
-	indices[0] = 0;  // Bottom left.
-	indices[1] = 1;  // Top middle.
-	indices[2] = 2;  // Bottom right.
+	//indices[0] = 0;  // Bottom left.
+	//indices[1] = 1;  // Top middle.
+	//indices[2] = 2;  // Bottom right.
+
+	for (unsigned int lat = 0; lat < latitudeBands; ++lat)
+	{
+		for (unsigned int lon = 0; lon < longitudeBands; ++lon)
+		{
+			float first = (lat * (longitudeBands + 1)) + lon;
+			float second = first + longitudeBands + 1;
+			indices.push_back(first);
+			indices.push_back(second);
+			indices.push_back(first + 1);
+
+			indices.push_back(second);
+			indices.push_back(second + 1);
+			indices.push_back(first + 1);
+		}
+	}
 
 	// Set up the description of the static vertex buffer.
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -73,7 +103,7 @@ bool Mesh::InitBuffers(ID3D11Device* device)
 	vertexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the vertex data.
-	vertexData.pSysMem = vertices;
+	vertexData.pSysMem = &vertices[0];
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
 
@@ -93,7 +123,7 @@ bool Mesh::InitBuffers(ID3D11Device* device)
 	indexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the index data.
-	indexData.pSysMem = indices;
+	indexData.pSysMem = &indices[0];
 	indexData.SysMemPitch = 0;
 	indexData.SysMemSlicePitch = 0;
 
@@ -103,13 +133,6 @@ bool Mesh::InitBuffers(ID3D11Device* device)
 	{
 		return false;
 	}
-
-	// Release the arrays now that the vertex and index buffers have been created and loaded.
-	delete[] vertices;
-	vertices = 0;
-
-	delete[] indices;
-	indices = 0;
 
 	return true;
 }
