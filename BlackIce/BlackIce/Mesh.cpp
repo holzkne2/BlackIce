@@ -57,7 +57,7 @@ bool Mesh::InitBuffers(ID3D11Device* device)
 
 		for (unsigned int lon = 0; lon <= longitudeBands; ++lon)
 		{
-			float phi = lon * 2 * DirectX::XM_PI / latitudeBands;
+			float phi = lon * 2.0f * DirectX::XM_PI / latitudeBands;
 			float sinPhi = sin(phi);
 			float cosPhi = cos(phi);
 
@@ -65,9 +65,13 @@ bool Mesh::InitBuffers(ID3D11Device* device)
 			float y = cosTheta;
 			float z = sinPhi * sinTheta;
 
+			float u = 1.0f - (lon / longitudeBands);
+			float v = 1.0f - (lat / latitudeBands);
+
 			VertexType vertex;
 			vertex.position = D3DXVECTOR3(x, y, z);
 			vertex.color = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+			vertex.uvs = D3DXVECTOR2(u, v);
 
 			vertices.push_back(vertex);
 		}

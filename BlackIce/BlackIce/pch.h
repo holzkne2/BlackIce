@@ -1,7 +1,6 @@
 #pragma once
 
 #include <WinSDKVer.h>
-#define _WIN32_WINNT 0x0600
 #include <SDKDDKVer.h>
 
 // Use the C++ standard templated min/max
@@ -29,7 +28,7 @@
 
 #include <d3d11_1.h>
 #include <DirectXMath.h>
-#include <d3dx9math.h>
+#include <D3DX10math.h>
 #include <D3DX11async.h>
 #include <DirectXColors.h>
 

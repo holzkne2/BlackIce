@@ -45,6 +45,12 @@
     <ClInclude Include="VertexColorMaterial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UnlitTextureMaterial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -68,6 +74,12 @@
     <ClCompile Include="VertexColorMaterial.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UnlitTextureMaterial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="BlackIce.rc">
@@ -84,5 +96,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="VertexColorShader.shader" />
+    <None Include="UnlitTextureShader.shader" />
   </ItemGroup>
 </Project>

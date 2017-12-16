@@ -26,7 +26,7 @@ void Engine::Init(HWND window, int width, int height)
 	m_mesh = std::make_unique<Mesh>();
 	m_mesh->Init();
 
-	m_material = std::make_unique<VertexColorMaterial>();
+	m_material = std::make_unique<UnlitTextureMaterial>();
 	m_material->Init();
 }
 

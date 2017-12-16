@@ -3,7 +3,7 @@
 #include <memory>
 #include "DeviceResources.h"
 #include "Mesh.h"
-#include "VertexColorMaterial.h"
+#include "UnlitTextureMaterial.h"
 
 namespace BlackIceEngine
 {
@@ -46,7 +46,7 @@ namespace BlackIceEngine
 
 
 		std::unique_ptr<Mesh> m_mesh;
-		std::unique_ptr<VertexColorMaterial> m_material;
+		std::unique_ptr<UnlitTextureMaterial> m_material;
 
 		// Singleton
 	public:
