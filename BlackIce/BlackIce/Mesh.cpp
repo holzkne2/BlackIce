@@ -70,8 +70,9 @@ bool Mesh::InitBuffers(ID3D11Device* device)
 
 			VertexType vertex;
 			vertex.position = D3DXVECTOR3(x, y, z);
-			vertex.color = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+			//vertex.color = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 			vertex.uvs = D3DXVECTOR2(u, v);
+			D3DXVec3Normalize(&vertex.normal, &D3DXVECTOR3(x, y, z));
 
 			vertices.push_back(vertex);
 		}

@@ -26,8 +26,12 @@ void Engine::Init(HWND window, int width, int height)
 	m_mesh = std::make_unique<Mesh>();
 	m_mesh->Init();
 
-	m_material = std::make_unique<UnlitTextureMaterial>();
+	m_material = std::make_unique<SimpleStandardMaterial>();
 	m_material->Init();
+
+	m_light = std::make_unique<Light>();
+	m_light->SetDiffuseColor(1, 1, 1);
+	m_light->SetDirection(0.5, -1, -1);
 }
 
 void Engine::Tick()
@@ -58,7 +62,7 @@ void Engine::Render()
 
 	D3DXVECTOR3 up, position, lookAt;
 	up = D3DXVECTOR3(0, 1, 0);
-	position = D3DXVECTOR3(0, 0, -10);
+	position = D3DXVECTOR3(0, 0, -5);
 	lookAt = D3DXVECTOR3(0, 0, 1);
 	D3DXMatrixLookAtLH(&view, &position, &lookAt, &up);
 
@@ -68,7 +72,7 @@ void Engine::Render()
 	D3DXMatrixPerspectiveFovLH(&projection, fieldOfView, screenAspect, 0.1f, 1000);
 
 	m_mesh->Render();
-	m_material->Render(m_mesh->GetIndexCount(), world, view, projection);
+	m_material->Render(m_mesh->GetIndexCount(), world, view, projection, m_light.get());
 
 	m_deviceResources->PIXEndEvent();
 
