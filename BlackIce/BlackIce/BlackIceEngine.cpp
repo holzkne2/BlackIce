@@ -31,7 +31,7 @@ void Engine::Init(HWND window, int width, int height)
 
 	m_light = std::make_unique<Light>();
 	m_light->SetDiffuseColor(1, 1, 1);
-	m_light->SetDirection(0.5, -1, -1);
+	m_light->SetDirection(0.25, -0.5, -1);
 }
 
 void Engine::Tick()

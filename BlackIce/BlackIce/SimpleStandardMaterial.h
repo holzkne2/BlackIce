@@ -18,8 +18,9 @@ namespace BlackIceEngine
 		struct LightBufferType
 		{
 			D3DXVECTOR4 diffuseColor;
-			D3DXVECTOR3 lightDirection;
-			float padding;  // Added extra padding so structure is a multiple of 16 for CreateBuffer function requirements.
+			D3DXVECTOR4 lightDirection;
+			D3DXVECTOR4 cameraPos;
+			//D3DXVECTOR3 padding;  // Added extra padding so structure is a multiple of 16 for CreateBuffer function requirements.
 		};
 
 	public:

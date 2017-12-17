@@ -363,8 +363,9 @@ bool SimpleStandardMaterial::SetShaderParameters(ID3D11DeviceContext* deviceCont
 
 	// Copy the lighting variables into the constant buffer.
 	dataPtr2->diffuseColor = light->GetDiffuseColor();
-	dataPtr2->lightDirection = light->GetDirection();
-	dataPtr2->padding = 0.0f;
+	dataPtr2->lightDirection = D3DXVECTOR4(light->GetDirection(), 0.0);
+	dataPtr2->cameraPos = D3DXVECTOR4(0, 0, -5, 0.0);
+	//dataPtr2->padding = D3DXVECTOR3(0, 0, 0);
 
 	// Unlock the constant buffer.
 	deviceContext->Unmap(m_lightBuffer, 0);
