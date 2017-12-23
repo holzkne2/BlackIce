@@ -130,9 +130,10 @@ float2 LightingFuncGGX_REF(float3 N, float3 V, float3 L, float roughness, float 
 
 float4 frag(PixelInputType i) : SV_TARGET
 {
-	float3 albedo = pow(mainTexture.Sample(SampleType, i.uv).rgb, 2.2);
+	float3 albedo = float3(0.55, 0.55, 0.55);
+	albedo = pow(mainTexture.Sample(SampleType, i.uv).rgb, 2.2);
 	float3 normal = i.normal;
-	float metallic = 0;
+	float metallic = 1.0;
 	float roughness = 0.5;
 	roughness = max(roughness, 0.002);
 
@@ -144,44 +145,46 @@ float4 frag(PixelInputType i) : SV_TARGET
 	float3 F0 = float3(0.04, 0.04, 0.04);
 	F0 = lerp(F0, albedo, metallic);
 
-	float3 L = normalize(-lightDirection.xyz);
-		float lf = LightingFuncGGX_REF(N, V, L, roughness, F0);
-	float3 light = (float3(lf, lf, lf) + albedo / PI) * max(dot(N, L), 0.0) * lightColor.rgb;
-	float3 finalColor = light + float3(0.03, 0.03, 0.03) * albedo;
-	finalColor = finalColor / (finalColor + float3(1.0, 1.0, 1.0));
-	finalColor = pow(finalColor, 1 / 2.2);
-	return float4(finalColor, 1.0);
-
-	//float3 Lo = float3(0, 0, 0);
 	//{
 	//	float3 L = normalize(-lightDirection.xyz);
-	//	float3 H = normalize(V + L);
-	//	float3 radiance = lightColor.rgb;
-
-	//	// cook-torrance brdf
-	//	float NDF = DistributionGGX(N, H, roughness);
-	//	float G = GeometrySmith(N, V, L, roughness);
-	//	float3 F = fresnelSchlick(saturate(dot(H, V)), F0);
-
-	//	float3 kS = F;
-	//	float3 kD = float3(1.0, 1.0, 1.0) - kS;
-	//	kD *= 1.0 - metallic;
-
-	//	float3 nominator = NDF * G * F;
-	//	float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
-	//	float3 specular = nominator / max(denominator, 0.001);
-
-	//		//return float4(saturate(dot(H, V)), NDF, NDF, 1.0);
-	//		//return float4(kD, 1.0);
-
-	//	// add to outgoing radiance Lo
-	//	float NdotL = max(dot(N, L), 0.0);
-	//	Lo += (kD * albedo / PI + specular) * radiance * NdotL;
+	//		float lf = LightingFuncGGX_REF(N, V, L, roughness, F0);
+	//	float3 light = (float3(lf, lf, lf) + albedo / PI) * max(dot(N, L), 0.0) * lightColor.rgb;
+	//		float3 finalColor = light + float3(0.03, 0.03, 0.03) * albedo;
+	//		finalColor = finalColor / (finalColor + float3(1.0, 1.0, 1.0));
+	//	finalColor = pow(finalColor, 1 / 2.2);
+	//	return float4(finalColor, 1.0);
 	//}
-	//float3 ambient = float3(0.03, 0.03, 0.03) * albedo;
-	//float3 finalColor = ambient + Lo;
 
-	//// HDR tonemapping
-	//finalColor = finalColor / (finalColor + float3(1.0, 1.0, 1.0));
-	//return float4(pow(finalColor, 1 / 2.2), 1.0);
+	float3 Lo = float3(0, 0, 0);
+	{
+		float3 L = normalize(-lightDirection.xyz);
+		float3 H = normalize(V + L);
+		float3 radiance = lightColor.rgb;
+
+		// cook-torrance brdf
+		float NDF = DistributionGGX(N, H, roughness);
+		float G = GeometrySmith(N, V, L, roughness);
+		float3 F = fresnelSchlick(saturate(dot(H, V)), F0);
+
+		float3 kS = F;
+		float3 kD = float3(1.0, 1.0, 1.0) - kS;
+		kD *= 1.0 - metallic;
+
+		float3 nominator = NDF * G * F;
+		float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
+		float3 specular = nominator / max(denominator, 0.001);
+
+			//return float4(saturate(dot(V, H)), 0, 0, 1.0);
+			//return float4(nominator, 1.0);
+
+		// add to outgoing radiance Lo
+		float NdotL = max(dot(N, L), 0.0);
+		Lo += (kD * albedo / PI + specular) * radiance * NdotL;
+	}
+	float3 ambient = float3(0.03, 0.03, 0.03) * albedo;
+	float3 finalColor = ambient + Lo;
+
+	// HDR tonemapping
+	finalColor = finalColor / (finalColor + float3(1.0, 1.0, 1.0));
+	return float4(pow(finalColor, 1 / 2.2), 1.0);
 }
